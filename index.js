@@ -1,6 +1,7 @@
 'use strict';
 
 var Transform = require('readable-stream/transform');
+var applySourceMap = require('vinyl-sourcemaps-apply');
 var rs = require('replacestream');
 var istextorbinary = require('istextorbinary');
 
@@ -48,6 +49,11 @@ module.exports = function(search, replacement, options) {
             }
 
             file.contents = new Buffer(result);
+
+            // apply source map
+            if (file.sourceMap) {
+              applySourceMap(file, result.map);
+            }
           }
           return callback(null, file);
         }
